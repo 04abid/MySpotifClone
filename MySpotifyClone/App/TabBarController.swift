@@ -29,6 +29,4 @@ class TabBarController: UITabBarController {
         
         viewControllers = [homeNavigation,searchNavigation,librarNavigation]
     }
-   
-    
 }

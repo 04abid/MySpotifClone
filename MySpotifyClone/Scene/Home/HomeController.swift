@@ -36,6 +36,7 @@ class HomeController: BaseController {
         collection.backgroundColor = .black
         collection.delegate = self
         collection.dataSource = self
+        collection.translatesAutoresizingMaskIntoConstraints = false
         collection.register(GridCell.self, forCellWithReuseIdentifier: GridCell.identifier)
         collection.register(LargeCardCell.self, forCellWithReuseIdentifier: LargeCardCell.identifier)
         collection.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.indentifier)
@@ -46,6 +47,7 @@ class HomeController: BaseController {
     private lazy var profileHeaderView: UIView = {
        let view = UIView()
         view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -58,8 +60,7 @@ class HomeController: BaseController {
         return stack
     }()
     
-//    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(manager: CoreManager(), tokenProvider: KeychainManager(), authManager: AuthManager(manager: CoreManager())))
-    
+
     private let profileViewModel = ProfileViewModel(useCase: ProfileManager(tokenManager: .init(manager: CoreManager(),  authManager: AuthManager(manager: CoreManager()))))
     
     private let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager(manager: CoreManager(), authManager: AuthManager(manager: CoreManager()))))
@@ -121,12 +122,6 @@ class HomeController: BaseController {
         stack.addArrangedSubview(allButton)
         stack.addArrangedSubview(musicButton)
         stack.addArrangedSubview(podcastButton)
-
-        profileHeaderView.addSubview(stack)
-        NSLayoutConstraint.activate([
-            stack.centerYAnchor.constraint(equalTo: profileHeaderView.centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 20)
-        ])
     }
 
     private func configure(data:UserProfile) {
@@ -146,31 +141,45 @@ class HomeController: BaseController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        profileHeaderView.frame = CGRect(x: 0, y: Int(view.safeAreaInsets.top) - 45, width: Int(view.width), height: 80)
-        profilePicture.layer.cornerRadius = profilePicture.frame.width / 2
-        
-        view.addSubview(collection)
-        collection.frame = CGRect(x: 0, y: profileHeaderView.frame.maxY, width: view.frame.width, height: view.frame.height)
+        profilePicture.layer.cornerRadius = 20
     }
     
     override func configureUI() {
         title = "Home"
         view.backgroundColor = .black
-        navigationItem.largeTitleDisplayMode = .always
+        view.bringSubviewToFront(profileHeaderView)
+        navigationItem.largeTitleDisplayMode = .never
+        navigationController?.navigationBar.prefersLargeTitles = false
+        configureStack()
         updateFilterButtons()
         refresh()
     }
     
     
     override func configureConstraint() {
+        view.addSubview(collection)
         view.addSubview(profileHeaderView)
         profileHeaderView.addSubview(profilePicture)
-        configureStack()
+        profileHeaderView.addSubview(stack)
         NSLayoutConstraint.activate([
+            
+            collection.topAnchor.constraint(equalTo: profileHeaderView.bottomAnchor),
+            collection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
             profilePicture.leadingAnchor.constraint(equalTo: profileHeaderView.leadingAnchor,constant: 12),
             profilePicture.centerYAnchor.constraint(equalTo: profileHeaderView.centerYAnchor),
             profilePicture.widthAnchor.constraint(equalToConstant: 40),
-            profilePicture.heightAnchor.constraint(equalToConstant: 40)
+            profilePicture.heightAnchor.constraint(equalToConstant: 40),
+            
+            profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -45),
+            profileHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            profileHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            profileHeaderView.heightAnchor.constraint(equalToConstant: 80),
+            
+            stack.centerYAnchor.constraint(equalTo: profileHeaderView.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 20)
         ])
     }
     
@@ -289,6 +298,10 @@ extension HomeController: UICollectionViewDelegate,UICollectionViewDataSource {
     //MARK: SectionHeader
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        print(">>> CELL TAPPED: \(indexPath)")
+        print(">>> DELEGATE NIL?: \(delegate == nil)")
+        
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.indentifier, for: indexPath) as! SectionHeader
         
         let section = HomeSection(rawValue: indexPath.section)
@@ -366,7 +379,6 @@ extension HomeController: UICollectionViewDelegate,UICollectionViewDataSource {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
         section.boundarySupplementaryItems = [header]
-        
         return section
     }
 }

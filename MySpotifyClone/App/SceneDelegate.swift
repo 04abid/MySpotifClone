@@ -5,8 +5,6 @@
 //  Created by Abid Kerimli on 20.02.26.
 //
 
-import UIKit
-import SpotifyiOS
 
 import UIKit
 import SpotifyiOS
@@ -18,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }        
         window = UIWindow(windowScene: windowScene)
     
         if manager.isSignedIn {
@@ -35,10 +33,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
+//    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+//        guard let url = URLContexts.first?.url else { return }
+//        let parameters = SpotifyPlayBackManager.shared.appRemote.authorizationParameters(from: url)
+//        if let token = parameters?[SPTAppRemoteAccessTokenKey] {
+//            SpotifyPlayBackManager.shared.appRemote.connectionParameters.accessToken = token
+//            SpotifyPlayBackManager.shared.appRemote.connect()
+//        }
+//    }
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else { return }
         let parameters = SpotifyPlayBackManager.shared.appRemote.authorizationParameters(from: url)
         if let token = parameters?[SPTAppRemoteAccessTokenKey] {
+            KeychainManager.shared.save(token, forKey: "spotify_remote_token")
             SpotifyPlayBackManager.shared.appRemote.connectionParameters.accessToken = token
             SpotifyPlayBackManager.shared.appRemote.connect()
         }

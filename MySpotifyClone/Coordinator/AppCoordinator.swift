@@ -11,6 +11,8 @@ import UIKit
 class AppCoordinator:Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
+    private var tabBar: UITabBarController?
+    private let miniPlayer = MiniPlayerView()
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -18,6 +20,7 @@ class AppCoordinator:Coordinator {
     
     func start() {
         let tabBar = UITabBarController()
+        self.tabBar = tabBar
         
         let homeNav = UINavigationController()
         homeNav.tabBarItem = .init(title: "Home", image: UIImage(systemName: "house"), tag: 0)
@@ -39,9 +42,16 @@ class AppCoordinator:Coordinator {
         childCoordinators.append(librarcoordinator)
         
         tabBar.viewControllers = [homeNav,searchNav,libraryNav]
+        
+        tabBar.view.addSubview(miniPlayer)
+        NSLayoutConstraint.activate([
+            miniPlayer.leadingAnchor.constraint(equalTo: tabBar.view.leadingAnchor),
+            miniPlayer.trailingAnchor.constraint(equalTo: tabBar.view.trailingAnchor),
+            miniPlayer.bottomAnchor.constraint(equalTo: tabBar.tabBar.topAnchor),
+            miniPlayer.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
         navigationController.setViewControllers([tabBar], animated: true)
         navigationController.setNavigationBarHidden(true, animated: true)
     }
-    
-    
 }

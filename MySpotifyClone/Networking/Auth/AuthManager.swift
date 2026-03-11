@@ -17,14 +17,7 @@ class AuthManager:AuthUseCase {
         self.manager = manager
     }
     
-//    private struct Constants {
-//        static let clientID = "541c65d55d514f81a5c0913b1094aaa2"
-//        static let clientSecret = "62e203140ad2459089ed2341f16d94cf"
-//        static let redirectURI = "spotify-ios-quick-start://spotify-login-callback"
-//        static let scopes = "user-read-private%20user-read-email"
-//        static let tokenApiURl = "https://accounts.spotify.com/api/token"
-//    }
-    
+
     private struct Constants {
         static let clientID = "541c65d55d514f81a5c0913b1094aaa2"
         static let clientSecret = "62e203140ad2459089ed2341f16d94cf"

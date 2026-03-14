@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 class PlayerViewModel {
-    let track: Track
+    // Track ola bilər nil — expand halında Track modelimiz yoxdur
+    let track: Track?
     private let playerManager: SpotifyPlayBackManager
     
     // State
@@ -21,7 +22,11 @@ class PlayerViewModel {
     private(set) var trackDuration: Int = 0
     private var timer: Timer?
     
-    // UI callback-ler
+    /// true = SDK-dan gələn state-ləri qəbul edirik
+    /// false = play(uri:) hələ çağırılmayıb, ignore edirik
+    private var isListeningToState = false
+    
+    // UI callback-lər
     var onPlayStateChanged: ((Bool) -> Void)?
     var onTrackChanged: ((String, String) -> Void)?
     var onImageChanged: ((UIImage?) -> Void)?
@@ -31,16 +36,44 @@ class PlayerViewModel {
     var onRepeatChanged: ((Int) -> Void)?
     var onGradientColorChanged: ((UIColor) -> Void)?
     
-    // Computed
-    var trackName: String { track.name }
-    var artistName: String { track.artists.first?.name ?? "" }
-    var imageURL: String { track.album.images.first?.url ?? "" }
-    var albumName: String { track.album.name }
+    // Computed — expand halında PlaybackManager-dan oxuyur
+    var trackName: String {
+        track?.name ?? playerManager.lastTrackName
+    }
+    var artistName: String {
+        track?.artists.first?.name ?? playerManager.lastArtistName
+    }
+    var imageURL: String {
+        track?.album.images.first?.url ?? ""
+    }
+    var albumName: String {
+        track?.album.name ?? ""
+    }
+    
+    /// Expand halında PlaybackManager-dan son image-i qaytarır
+    var currentImage: UIImage? {
+        playerManager.lastImage
+    }
+    
+    // MARK: - Init: yeni mahnıya click
     
     init(track: Track, playerManager: SpotifyPlayBackManager = .shared) {
         self.track = track
         self.playerManager = playerManager
         self.trackDuration = track.durationMs
+        self.isListeningToState = false  // play basılana qədər ignore
+        self.hasStartedPlaying = false
+        setupListeners()
+    }
+    
+    // MARK: - Init: mini player-dən expand (Track model yoxdur)
+    
+    init(playerManager: SpotifyPlayBackManager = .shared) {
+        self.track = nil
+        self.playerManager = playerManager
+        self.trackDuration = playerManager.lastTrackDuration
+        self.isListeningToState = true   // artıq oxuyur
+        self.hasStartedPlaying = true    // resume etsin, play(uri:) yox
         setupListeners()
     }
     
@@ -48,28 +81,36 @@ class PlayerViewModel {
     
     private func setupListeners() {
         playerManager.onStateChanged = { [weak self] isPaused, trackName, artistName, position, duration in
+            guard let self = self, self.isListeningToState else { return }
+            
             DispatchQueue.main.async {
-                self?.isPlaying = !isPaused
-                self?.currentPosition = position
-                self?.trackDuration = duration
+                self.isPlaying = !isPaused
+                self.currentPosition = position
+                self.trackDuration = duration
                 
-                self?.onPlayStateChanged?(!isPaused)
-                self?.onTrackChanged?(trackName, artistName)
-                self?.updateTimeLabels()
+                self.onPlayStateChanged?(!isPaused)
+                self.onTrackChanged?(trackName, artistName)
+                self.updateTimeLabels()
                 
-                if !isPaused {
-                    self?.startTimer()
-                } else {
-                    self?.timer?.invalidate()
+                if duration > 0 {
+                    let progress = Float(position) / Float(duration)
+                    self.onProgressChanged?(progress)
                 }
                 
-                self?.playerManager.onImageReady = { [weak self] image in
-                    DispatchQueue.main.async {
-                        self?.onImageChanged?(image)
-                        if let color = image?.averageColor {
-                            self?.onGradientColorChanged?(color)
-                        }
-                    }
+                if !isPaused {
+                    self.startTimer()
+                } else {
+                    self.timer?.invalidate()
+                }
+            }
+        }
+        
+        playerManager.onImageReady = { [weak self] image in
+            guard let self = self, self.isListeningToState else { return }
+            DispatchQueue.main.async {
+                self.onImageChanged?(image)
+                if let color = image?.averageColor {
+                    self.onGradientColorChanged?(color)
                 }
             }
         }
@@ -78,17 +119,32 @@ class PlayerViewModel {
     // MARK: - Sync
     
     func syncPlayerState() {
+        guard isListeningToState else { return }
+        
         playerManager.getPlayerState { [weak self] isShuffling, repeatValue, position, isPaused in
             DispatchQueue.main.async {
-                self?.isShuffleOn = isShuffling
-                self?.repeatCount = repeatValue
+                guard let self = self else { return }
+                self.isShuffleOn = isShuffling
+                self.repeatCount = repeatValue
+                self.currentPosition = position
+                self.isPlaying = !isPaused
                 
-                self?.onShuffleChanged?(isShuffling)
-                self?.onRepeatChanged?(repeatValue)
+                self.onShuffleChanged?(isShuffling)
+                self.onRepeatChanged?(repeatValue)
+                self.onPlayStateChanged?(!isPaused)
+                self.updateTimeLabels()
+                
+                if self.trackDuration > 0 {
+                    let progress = Float(position) / Float(self.trackDuration)
+                    self.onProgressChanged?(progress)
+                }
+                
+                if !isPaused {
+                    self.startTimer()
+                }
             }
         }
     }
-    
     
     // MARK: - Actions
     
@@ -101,15 +157,18 @@ class PlayerViewModel {
                 if hasStartedPlaying {
                     playerManager.resume()
                 } else {
-                    playerManager.play(uri: track.uri)
+                    guard let uri = track?.uri else { return }
+                    playerManager.play(uri: uri)
                     hasStartedPlaying = true
+                    isListeningToState = true
                 }
                 startTimer()
             }
             isPlaying.toggle()
             onPlayStateChanged?(isPlaying)
         } else {
-            playerManager.authorize(uri: track.uri)
+            guard let uri = track?.uri else { return }
+            playerManager.authorize(uri: uri)
         }
     }
     
@@ -117,7 +176,8 @@ class PlayerViewModel {
         if playerManager.isConnected {
             playerManager.skipToNext()
         } else {
-            playerManager.authorize(uri: track.uri)
+            guard let uri = track?.uri else { return }
+            playerManager.authorize(uri: uri)
         }
     }
     
@@ -125,7 +185,8 @@ class PlayerViewModel {
         if playerManager.isConnected {
             playerManager.skipToPrevious()
         } else {
-            playerManager.authorize(uri: track.uri)
+            guard let uri = track?.uri else { return }
+            playerManager.authorize(uri: uri)
         }
     }
     
@@ -184,6 +245,7 @@ class PlayerViewModel {
     
     func cleanup() {
         timer?.invalidate()
+        timer = nil
         playerManager.onStateChanged = nil
         playerManager.onImageReady = nil
     }

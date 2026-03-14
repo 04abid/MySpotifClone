@@ -8,6 +8,13 @@ import SpotifyiOS
 import Foundation
 
 class SpotifyPlayBackManager: NSObject {
+    
+    private(set) var lastTrackName: String = ""
+    private(set) var lastArtistName: String = ""
+    private(set) var lastTrackURI: String = ""
+    private(set) var lastTrackDuration: Int = 0
+    private(set) var lastImage: UIImage?
+   
     static let shared = SpotifyPlayBackManager()
     
     // SDK callback (köhnə - saxlayırıq)
@@ -105,6 +112,7 @@ class SpotifyPlayBackManager: NSObject {
                 print("Image fetch xəta: \(error)")
                 completion(nil)
             } else if let image = image as? UIImage {
+                self.lastImage = image     // ← YENİ sətir
                 completion(image)
                 NotificationCenter.default.post(name: .playerImageDidChange, object: nil, userInfo: [
                     "image": image
@@ -151,6 +159,12 @@ extension SpotifyPlayBackManager: SPTAppRemoteDelegate {
 
 extension SpotifyPlayBackManager: SPTAppRemotePlayerStateDelegate {
     func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
+        
+//         ---- YENİ: son track məlumatını saxla ----
+        lastTrackName = playerState.track.name
+        lastArtistName = playerState.track.artist.name
+        lastTrackURI = playerState.track.uri
+        lastTrackDuration = Int(playerState.track.duration)
         onPlayerStateChanged?(playerState)
         
         onStateChanged?(
@@ -170,8 +184,8 @@ extension SpotifyPlayBackManager: SPTAppRemotePlayerStateDelegate {
             "trackName": playerState.track.name,
             "artistName": playerState.track.artist.name,
             "position": Int(playerState.playbackPosition),
-            "duration": Int(playerState.track.duration)
-            
+            "duration": Int(playerState.track.duration),
+            "trackURI": playerState.track.uri
         ])
     }
 }

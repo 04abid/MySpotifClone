@@ -8,8 +8,14 @@
 import UIKit
 
 
-class HomeCoordinator:Coordinator {
+
+// MARK: - HomeCoordinator (Yenilənmiş)
+
+class HomeCoordinator: Coordinator {
     var navigationController: UINavigationController
+    
+    /// Track tap-ını AppCoordinator-a yönləndirmək üçün
+    weak var playerDelegate: HomeCoordinatorDelegate?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -22,13 +28,17 @@ class HomeCoordinator:Coordinator {
     }
 }
 
-extension HomeCoordinator:HomeControllerDelegate {
-    
+extension HomeCoordinator: HomeControllerDelegate {
     
     func didTapTrack(track: Track) {
-        let controller = PlayerController(viewModel: PlayerViewModel(track: track))
-        controller.modalPresentationStyle = .fullScreen
-        navigationController.present(controller, animated: true)
+        // ---- DƏYİŞİKLİK: Artıq burada present etmirik ----
+        // Əvvəlki kod (SİLİNDİ):
+        //   let controller = PlayerController(viewModel: PlayerViewModel(track: track))
+        //   controller.modalPresentationStyle = .fullScreen
+        //   navigationController.present(controller, animated: true)
+        
+        // YENİ: AppCoordinator-a delegate et (mini player + transition idarəsi orada)
+        playerDelegate?.homeCoordinatorDidTapTrack(track)
     }
     
     func didTapAlbum(album: Album) {
@@ -43,6 +53,6 @@ extension HomeCoordinator:HomeControllerDelegate {
     }
     
     func didTapSeeAll(section: HomeSection) {
-        // yaxinda
+        // yaxında
     }
 }

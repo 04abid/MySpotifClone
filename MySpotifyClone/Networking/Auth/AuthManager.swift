@@ -9,7 +9,6 @@ import Foundation
 
 
 class AuthManager:AuthUseCase {
-    
     static let shared = AuthManager()
     private let manager =  CoreManager()
     private lazy var  fireStore = FireStoreManager()
@@ -89,7 +88,6 @@ class AuthManager:AuthUseCase {
 
 extension AuthManager {
     func exchangeCodeForToken(code: String, completion: @escaping (AuthResponse?, String?) -> Void) {
-        
         let parameters: [String:Any] = [
             "grant_type"  : "authorization_code",
             "code"        : code,

@@ -18,6 +18,7 @@ enum Endpoint {
     case Browse
     case savedAlbums
     case topTracks
+    case albumDetail(id: String)
     
     var url: String {
         let base = "https://api.spotify.com/v1"
@@ -31,6 +32,7 @@ enum Endpoint {
         case .Browse:            return "\(base)/me/shows?offset=0&limit=20"
         case .savedAlbums:       return "\(base)/me/albums?limit=10"
         case .topTracks:         return "\(base)/me/top/tracks?limit=10"
+        case .albumDetail(let id): return "\(base)/albums/\(id)"
         }
     }
 }

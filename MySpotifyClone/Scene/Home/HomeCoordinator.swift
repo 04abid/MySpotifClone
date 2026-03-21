@@ -31,19 +31,12 @@ class HomeCoordinator: Coordinator {
 extension HomeCoordinator: HomeControllerDelegate {
     
     func didTapTrack(track: Track) {
-        // ---- DƏYİŞİKLİK: Artıq burada present etmirik ----
-        // Əvvəlki kod (SİLİNDİ):
-        //   let controller = PlayerController(viewModel: PlayerViewModel(track: track))
-        //   controller.modalPresentationStyle = .fullScreen
-        //   navigationController.present(controller, animated: true)
-        // YENİ: AppCoordinator-a delegate et (mini player + transition idarəsi orada)
         playerDelegate?.homeCoordinatorDidTapTrack(track)
     }
     
     func didTapAlbum(album: Album) {
-        let controller = AlbumController(viewModel: AlbumViewModel(album: album))
-        controller.modalPresentationStyle = .fullScreen
-        navigationController.present(controller, animated: true)
+        let controller = AlbumController(viewModel: AlbumViewModel(manager: AlbumManager(), album: album))
+        navigationController.show(controller, sender: nil)
     }
     
     func showProfile() {

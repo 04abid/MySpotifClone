@@ -10,17 +10,16 @@ import Foundation
 
 class AuthManager:AuthUseCase {
     
-    let manager: CoreManager
-    private let keychain = KeychainManager()
+    static let shared = AuthManager()
+    private let manager =  CoreManager()
+    private lazy var  fireStore = FireStoreManager()
     
-    init(manager: CoreManager) {
-        self.manager = manager
+    private init() {
+        self.clientID = KeychainManager.shared.get(forKey: "clientID")
+        self.clientSecret  = KeychainManager.shared.get(forKey: "clientSecret")
     }
-    
 
     private struct Constants {
-        static let clientID = "541c65d55d514f81a5c0913b1094aaa2"
-        static let clientSecret = "62e203140ad2459089ed2341f16d94cf"
         static let redirectURI = "spotify-ios-quick-start://spotify-login-callback"
         static let tokenApiURl = "https://accounts.spotify.com/api/token"
         static let scopes: String = [
@@ -41,7 +40,7 @@ class AuthManager:AuthUseCase {
         let body = "https://accounts.spotify.com/authorize"
         let urlString = "\(body)" +
             "?response_type=code" +
-            "&client_id=\(Constants.clientID)" +
+        "&client_id=\(self.clientID ?? "")" +
             "&scope=\(Constants.scopes)" +
             "&redirect_uri=\(Constants.redirectURI)" +
             "&show_dialog=true"
@@ -49,16 +48,21 @@ class AuthManager:AuthUseCase {
         return URL(string: urlString)
     }
     
+    private var clientID: String? = nil
+    private var clientSecret: String? = nil
+        
+    
+    
     var isSignedIn: Bool {
-        return keychain.get(forKey: "access_token") != nil
+        return KeychainManager.shared.get(forKey: "access_token") != nil
     }
     
     private var accessToken: String? {
-        return keychain.get(forKey: "access_token")
+        return KeychainManager.shared.get(forKey: "access_token")
     }
     
     private var refreshToken: String? {
-        return keychain.get(forKey: "refresh_token")
+        return KeychainManager.shared.get(forKey: "refresh_token")
     }
     
     private var tokenExparationDate: Date? {
@@ -75,7 +79,7 @@ class AuthManager:AuthUseCase {
     }
 
     public var authorizationHeader: String {
-        let token = "\(Constants.clientID):\(Constants.clientSecret)"
+        let token = "\(self.clientID ?? ""):\(self.clientSecret ?? "")"
         return "Basic \(Data(token.utf8).base64EncodedString())"
     }
 }
@@ -106,11 +110,11 @@ extension AuthManager {
     
     func cacheToken(result: AuthResponse) {
         if let accessToken = result.accessToken {
-            keychain.save(accessToken, forKey:"access_token")
+            KeychainManager.shared.save(accessToken, forKey:"access_token")
         }
         
         if let refreshToken = result.refreshToken {
-            keychain.save(refreshToken, forKey: "refresh_token")
+            KeychainManager.shared.save(refreshToken, forKey: "refresh_token")
         }
         
         let exparationDate = Date().addingTimeInterval(TimeInterval(result.expiresIn ?? 0))
@@ -151,6 +155,20 @@ extension AuthManager {
                         endpoint: Constants.tokenApiURl) { [weak self] result, error in
             if let result = result {
                 self?.cacheToken(result: result)
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+          func loadCredentials(completion:@escaping((Bool) -> Void)) {
+        fireStore.getDataFromFireBase { [weak self] clientID, clientSecret in
+            if let ID = clientID,let secret = clientSecret {
+                self?.clientID = ID
+                self?.clientSecret = secret
+                KeychainManager.shared.save(ID, forKey: "clientID")
+                KeychainManager.shared.save(secret, forKey: "clientSecret")
                 completion(true)
             } else {
                 completion(false)

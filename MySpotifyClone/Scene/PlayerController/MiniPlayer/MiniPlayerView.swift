@@ -136,18 +136,23 @@ class MiniPlayerView: UIView {
         let position = info["position"] as? Int ?? 0
         let duration = info["duration"] as? Int ?? 0
         
-        self.isPlaying = !isPaused
-        self.trackNameLabel.text = trackName
-        self.artistNameLabel.text = artistName
         
-        
-        let icon = isPaused ? "play.fill" : "pause.fill"
-        self.playPauseButton.setImage(UIImage(systemName: icon), for: .normal)
-        
-        if duration > 0 {
-            self.progressView.progress = Float(position) / Float(duration)
+        DispatchQueue.main.async {
+            
+            
+            self.isPlaying = !isPaused
+            self.trackNameLabel.text = trackName
+            self.artistNameLabel.text = artistName
+            
+            
+            let icon = isPaused ? "play.fill" : "pause.fill"
+            self.playPauseButton.setImage(UIImage(systemName: icon), for: .normal)
+            
+            if duration > 0 {
+                self.progressView.progress = Float(position) / Float(duration)
+            }
+            self.isHidden = false
         }
-        self.isHidden = false
     }
     
     @objc func playPauseButtonTapped() {

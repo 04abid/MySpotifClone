@@ -6,21 +6,14 @@
 //
 
 import UIKit
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    let manager = AuthManager(manager: CoreManager())
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-//        print(OuthManager.shared.signInURL?.absoluteString)
-//        manager.refreshAccessToken { success in
-//            print(success)
-        
-        
+        FirebaseApp.configure()
         return true
-        
     }
 
 

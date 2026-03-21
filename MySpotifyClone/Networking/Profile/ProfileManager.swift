@@ -18,4 +18,5 @@ class ProfileManager:ProfileUseCase {
     func getCurrentUserProfile(completion: @escaping (UserProfile?, String?) -> Void) {
         tokenManager.checkAccessToken(model: UserProfile.self, endpoint: Endpoint.UserProfile.url, completion: completion)
     }
+    
 }

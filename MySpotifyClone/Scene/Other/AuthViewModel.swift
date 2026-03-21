@@ -11,7 +11,7 @@ import Foundation
 class AuthViewModel {
     
     private var useCase: AuthUseCase
-    init(useCase: AuthUseCase = AuthManager(manager: CoreManager())) {
+    init(useCase: AuthUseCase = AuthManager.shared) {
         self.useCase = useCase
     }
     
@@ -19,7 +19,7 @@ class AuthViewModel {
     var succes:(() -> Void)?
     
     var signURL: URL? {
-        useCase.signInURL
+        AuthManager.shared.signInURL
     }
     
     func signIn(code:String) {

@@ -67,36 +67,6 @@ class AuthController: BaseController, WKNavigationDelegate {
         webView.frame = view.bounds
     }
     
-//    func webView(_ webView: WKWebView,
-//                 decidePolicyFor navigationAction: WKNavigationAction,
-//                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//        
-//        guard let url = navigationAction.request.url else {
-//            decisionHandler(.allow)
-//            return
-//        }
-//        
-//        print("POLICY URL: \(url.absoluteString)")
-//        
-//        // spotify-ios-quick-start:// gələndə tut
-//        if url.absoluteString.hasPrefix("spotify-ios-quick-start://") {
-//            let component = URLComponents(string: url.absoluteString)
-//            if let code = component?.queryItems?.first(where: { $0.name == "code" })?.value {
-//                print("code: \(code)")
-//                webView.isHidden = true
-//                OuthManager.shared.exchangeCodeForToken(code: code) { [weak self] success in
-//                    DispatchQueue.main.async {
-//                        self?.navigationController?.popToRootViewController(animated: true)
-//                        self?.compleationHandler?(success)
-//                    }
-//                }
-//            }
-//            decisionHandler(.cancel) // WebView-un yükləməsinin qarşısını al
-//            return
-//        }
-//        
-//        decisionHandler(.allow)
-//    }
     
     func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,

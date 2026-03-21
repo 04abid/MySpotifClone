@@ -8,18 +8,30 @@
 import UIKit
 
 class WelcomeController: BaseController {
-    
     private lazy var button: UIButton = {
        let button = UIButton()
         button.setTitle("Sign in with Spotify", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
+        button.isEnabled = false
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        AuthManager.shared.loadCredentials {  [weak self] succes in
+            if succes {
+                DispatchQueue.main.async {
+                    self?.button.isEnabled = true
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    self?.showAlert(title: "Error", message: "Failed to load credentials")
+                }
+            }
+        }
     }
     
     override func configureUI() {
@@ -40,14 +52,15 @@ class WelcomeController: BaseController {
     
 
     @objc func buttonTapped() {
-        let Controller = AuthController(viewModel: AuthViewModel(useCase: AuthManager(manager: CoreManager())))
-        Controller.compleationHandler = { [weak self] succes in
+        let controller = AuthController(viewModel: AuthViewModel(useCase: AuthManager.shared))
+        
+        controller.compleationHandler = { [weak self] succes in
             DispatchQueue.main.async {
                 self?.handleSignIn(succes:succes)
             }
         }
-        Controller.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.show(Controller, sender: nil)
+        controller.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.show(controller, sender: nil)
     }
     
     private func handleSignIn(succes: Bool) {

@@ -9,14 +9,12 @@ import Foundation
 
 
 class TokenRefreshManager {
-    private let manager: CoreManager
+    static let shared = TokenRefreshManager()
+    private let manager = CoreManager()
     private let tokenProvider =  KeychainManager.shared
-    private let authManager: AuthUseCase
+    private let authManager = AuthManager.shared
     
-    init(manager: CoreManager, authManager: AuthUseCase) {
-        self.manager = manager
-        self.authManager = authManager
-    }
+   private  init() {}
     
     func checkAccessToken<T:Codable>(model:T.Type,endpoint:String?,completion: @escaping((T?,String?) -> Void)) {
         authManager.refreshAccessToken { succes in

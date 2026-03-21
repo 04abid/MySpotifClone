@@ -12,7 +12,7 @@ import SpotifyiOS
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    let manager = AuthManager(manager: CoreManager())
+    let manager = AuthManager.shared
     var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -20,10 +20,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
     
         if manager.isSignedIn {
-           let navigationController = UINavigationController()
-            appCoordinator = AppCoordinator(navigationController: navigationController)
-            appCoordinator?.start()
-            window?.rootViewController = navigationController
+            AuthManager.shared.loadCredentials { succes in
+                DispatchQueue.main.async {
+                    if succes {
+                        let navigationController = UINavigationController()
+                        self.appCoordinator = AppCoordinator(navigationController: navigationController)
+                        self.appCoordinator?.start()
+                        self.window?.rootViewController = navigationController
+                    } else {
+                        let navVC = UINavigationController(rootViewController: WelcomeController())
+                        navVC.navigationBar.prefersLargeTitles = true
+                        navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
+                        self.window?.rootViewController = navVC
+                    }
+                }
+            }
         } else {
             let navVC = UINavigationController(rootViewController: WelcomeController())
             navVC.navigationBar.prefersLargeTitles = true
@@ -33,14 +44,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-//    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-//        guard let url = URLContexts.first?.url else { return }
-//        let parameters = SpotifyPlayBackManager.shared.appRemote.authorizationParameters(from: url)
-//        if let token = parameters?[SPTAppRemoteAccessTokenKey] {
-//            SpotifyPlayBackManager.shared.appRemote.connectionParameters.accessToken = token
-//            SpotifyPlayBackManager.shared.appRemote.connect()
-//        }
-//    }
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else { return }
         let parameters = SpotifyPlayBackManager.shared.appRemote.authorizationParameters(from: url)

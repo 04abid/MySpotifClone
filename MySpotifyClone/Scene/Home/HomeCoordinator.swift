@@ -36,7 +36,6 @@ extension HomeCoordinator: HomeControllerDelegate {
         //   let controller = PlayerController(viewModel: PlayerViewModel(track: track))
         //   controller.modalPresentationStyle = .fullScreen
         //   navigationController.present(controller, animated: true)
-        
         // YENİ: AppCoordinator-a delegate et (mini player + transition idarəsi orada)
         playerDelegate?.homeCoordinatorDidTapTrack(track)
     }

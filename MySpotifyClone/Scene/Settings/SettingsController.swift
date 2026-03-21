@@ -51,8 +51,7 @@ class SettingsController: BaseController {
     }
     
     private func viewYourProfile() {
-//        let controller = ProfileController(viewModel: ProfileViewModel(useCase: ProfileManager(manager: CoreManager(), tokenProvider: KeychainManager(), authManager: AuthManager(manager: CoreManager(), keychain: KeychainManager()))))
-      let controller = ProfileController(viewModel: ProfileViewModel(useCase: ProfileManager(tokenManager: TokenRefreshManager(manager: CoreManager() , authManager: AuthManager(manager: CoreManager())))))
+        let controller = ProfileController(viewModel: ProfileViewModel(useCase: ProfileManager(tokenManager: TokenRefreshManager.shared)))
         controller.navigationItem.largeTitleDisplayMode = .never
         navigationController?.show(controller, sender: nil)
     }

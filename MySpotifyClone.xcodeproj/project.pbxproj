@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		DF2DBFCC2F5A8D1A00ACFBD1 /* SpotifyiOS in Frameworks */ = {isa = PBXBuildFile; productRef = DF2DBFCB2F5A8D1A00ACFBD1 /* SpotifyiOS */; };
 		DFCDC9A82F501C8F00460F9C /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DFCDC9A72F501C8F00460F9C /* Alamofire */; };
+		DFDB977A2F681B13007832C2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB97792F681B13007832C2 /* FirebaseAuth */; };
+		DFDB977C2F681B13007832C2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB977B2F681B13007832C2 /* FirebaseCore */; };
+		DFDB977E2F681B13007832C2 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB977D2F681B13007832C2 /* FirebaseCrashlytics */; };
+		DFDB97802F681B13007832C2 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB977F2F681B13007832C2 /* FirebaseDatabase */; };
+		DFDB97822F681B13007832C2 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB97812F681B13007832C2 /* FirebaseFirestore */; };
+		DFDB97842F681B13007832C2 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DFDB97832F681B13007832C2 /* FirebaseStorage */; };
 		DFF150AA2F56F43300D15E8B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = DFF150A92F56F43300D15E8B /* Kingfisher */; };
 /* End PBXBuildFile section */
 
@@ -72,8 +78,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				DFF150AA2F56F43300D15E8B /* Kingfisher in Frameworks */,
+				DFDB977C2F681B13007832C2 /* FirebaseCore in Frameworks */,
+				DFDB97842F681B13007832C2 /* FirebaseStorage in Frameworks */,
 				DF2DBFCC2F5A8D1A00ACFBD1 /* SpotifyiOS in Frameworks */,
+				DFDB977E2F681B13007832C2 /* FirebaseCrashlytics in Frameworks */,
 				DFCDC9A82F501C8F00460F9C /* Alamofire in Frameworks */,
+				DFDB97822F681B13007832C2 /* FirebaseFirestore in Frameworks */,
+				DFDB97802F681B13007832C2 /* FirebaseDatabase in Frameworks */,
+				DFDB977A2F681B13007832C2 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,6 +149,12 @@
 				DFCDC9A72F501C8F00460F9C /* Alamofire */,
 				DFF150A92F56F43300D15E8B /* Kingfisher */,
 				DF2DBFCB2F5A8D1A00ACFBD1 /* SpotifyiOS */,
+				DFDB97792F681B13007832C2 /* FirebaseAuth */,
+				DFDB977B2F681B13007832C2 /* FirebaseCore */,
+				DFDB977D2F681B13007832C2 /* FirebaseCrashlytics */,
+				DFDB977F2F681B13007832C2 /* FirebaseDatabase */,
+				DFDB97812F681B13007832C2 /* FirebaseFirestore */,
+				DFDB97832F681B13007832C2 /* FirebaseStorage */,
 			);
 			productName = MySpotifyClone;
 			productReference = DF8B27BE2F48B86A0031ECB9 /* MySpotifyClone.app */;
@@ -224,6 +242,7 @@
 				DFCDC9A62F501C8E00460F9C /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DFF150A82F56F43300D15E8B /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				DF2DBFCA2F5A8D1A00ACFBD1 /* XCRemoteSwiftPackageReference "ios-sdk" */,
+				DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DF8B27BF2F48B86A0031ECB9 /* Products */;
@@ -618,6 +637,14 @@
 				minimumVersion = 5.11.1;
 			};
 		};
+		DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
 		DFF150A82F56F43300D15E8B /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -638,6 +665,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DFCDC9A62F501C8E00460F9C /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		DFDB97792F681B13007832C2 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		DFDB977B2F681B13007832C2 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		DFDB977D2F681B13007832C2 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		DFDB977F2F681B13007832C2 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		DFDB97812F681B13007832C2 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		DFDB97832F681B13007832C2 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DFDB97782F681B13007832C2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		DFF150A92F56F43300D15E8B /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

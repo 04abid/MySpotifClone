@@ -41,7 +41,6 @@ class HomeController: BaseController {
         collection.register(LargeCardCell.self, forCellWithReuseIdentifier: LargeCardCell.identifier)
         collection.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.indentifier)
         return collection
-        
     }()
     
     private lazy var profileHeaderView: UIView = {
@@ -60,10 +59,14 @@ class HomeController: BaseController {
         return stack
     }()
     
-
-    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(tokenManager: .init(manager: CoreManager(),  authManager: AuthManager(manager: CoreManager()))))
+//
+//    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(tokenManager: .init(manager: CoreManager(),  authManager: AuthManager(manager: CoreManager()))))
     
-    private let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager(manager: CoreManager(), authManager: AuthManager(manager: CoreManager()))))
+    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(tokenManager: TokenRefreshManager.shared))
+    
+//    private let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager(manager: CoreManager(), authManager: AuthManager(manager: CoreManager()))))
+    
+    private let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager.shared))
     
     private var selectedFilterIndex = 0
     

@@ -255,7 +255,7 @@ extension HomeController: UICollectionViewDelegate,UICollectionViewDataSource {
         case .recentlyPlayed:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridCell.identifier, for: indexPath) as! GridCell
             let data = homeViewModel.recentlyPlayed[indexPath.item]
-            cell.configure(image: data.track.album.images.first?.url ?? "" ,
+            cell.configure(image: data.track.album?.images.first?.url ?? "" ,
                            label: data.track.name)
             return cell
         case .savedAlbums:
@@ -271,7 +271,7 @@ extension HomeController: UICollectionViewDelegate,UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LargeCardCell.identifier, for: indexPath) as! LargeCardCell
             let data = homeViewModel.topTracks[indexPath.item]
             cell.configure(
-                    image: data.album.images.first?.url ?? "",
+                    image: data.album?.images.first?.url ?? "",
                     title: data.name,
                     subtitle: data.artists.first?.name ?? "")
             

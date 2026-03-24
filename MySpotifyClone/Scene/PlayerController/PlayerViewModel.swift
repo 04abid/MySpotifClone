@@ -44,10 +44,10 @@ class PlayerViewModel {
         track?.artists.first?.name ?? playerManager.lastArtistName
     }
     var imageURL: String {
-        track?.album.images.first?.url ?? ""
+        track?.album?.images.first?.url ?? ""
     }
     var albumName: String {
-        track?.album.name ?? ""
+        track?.album?.name ?? ""
     }
     
     /// Expand halında PlaybackManager-dan son image-i qaytarır

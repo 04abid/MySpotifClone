@@ -29,9 +29,9 @@ struct Track: Codable {
     let id: String
     let name: String
     let artists: [Artist]
-    let album: Album
+    let album: Album?
     let durationMs: Int
-    let explicit: Bool
+    let explicit: Bool?
     let uri: String
     let isPlayable: Bool?
     

@@ -12,6 +12,7 @@ class AlbumViewModel {
     
     var album: Album
     var albumDetail: [AlbumTrack] = []
+    
     var succes: (() -> Void)?
     var error: ((String) -> Void)?
     
@@ -30,5 +31,17 @@ class AlbumViewModel {
                 self.succes?()
             }
         }
+    }
+    
+    func getTrack(at index: Int) -> Track{
+        let albumType = albumDetail[index]
+        return Track(id: albumType.id,
+                     name: albumType.name,
+                     artists: albumType.artists,
+                     album: album,
+                     durationMs: albumType.durationMs,
+                     explicit: nil,
+                     uri: albumType.uri,
+                     isPlayable: nil)
     }
 }

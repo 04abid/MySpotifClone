@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol AlbumControllerDelegate {
+    func albumDetaiTapped(track:Track)
+}
+
 class AlbumController: BaseController {
     
     private lazy var table: UITableView = {
@@ -20,6 +24,7 @@ class AlbumController: BaseController {
         return table
     }()
     
+    var delegate: AlbumControllerDelegate?
     
     private let viewModel: AlbumViewModel
     init(viewModel: AlbumViewModel) {
@@ -68,5 +73,11 @@ extension AlbumController: UITableViewDelegate,UITableViewDataSource {
         let track = viewModel.albumDetail[indexPath.row]
         cell.configure(track: track)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let controller = PlayerController(viewModel: PlayerViewModel(track: viewModel.getTrack(at: indexPath.row),playerManager: SpotifyPlayBackManager.shared))
+//        navigationController?.show(controller, sender: nil)
+        delegate?.albumDetaiTapped(track: viewModel.getTrack(at: indexPath.row))
     }
 }

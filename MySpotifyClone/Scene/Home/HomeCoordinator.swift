@@ -36,6 +36,7 @@ extension HomeCoordinator: HomeControllerDelegate {
     
     func didTapAlbum(album: Album) {
         let controller = AlbumController(viewModel: AlbumViewModel(manager: AlbumManager(), album: album))
+        controller.delegate = self
         navigationController.show(controller, sender: nil)
     }
     
@@ -47,4 +48,11 @@ extension HomeCoordinator: HomeControllerDelegate {
     func didTapSeeAll(section: HomeSection) {
         // yaxında
     }
+}
+extension HomeCoordinator: AlbumControllerDelegate {
+    func albumDetaiTapped(track: Track) {
+        playerDelegate?.homeCoordinatorDidTapTrack(track)
+    }
+    
+    
 }

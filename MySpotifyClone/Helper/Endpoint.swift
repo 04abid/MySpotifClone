@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum Endpoint {
     case featuredPlaylists
     case newReleases
@@ -19,6 +18,7 @@ enum Endpoint {
     case savedAlbums
     case topTracks
     case albumDetail(id: String)
+    case search(word: String)
     
     var url: String {
         let base = "https://api.spotify.com/v1"
@@ -33,6 +33,9 @@ enum Endpoint {
         case .savedAlbums:       return "\(base)/me/albums?limit=10"
         case .topTracks:         return "\(base)/me/top/tracks?limit=10"
         case .albumDetail(let id): return "\(base)/albums/\(id)"
+        case .search(word: let word):
+            return "\(base)/search?q=\(word)&type=track,album,artist&limit=10"
+       
         }
     }
 }

@@ -344,7 +344,6 @@ extension PlayerController {
             self?.onDismissed?()
         }
     }
-    
     @objc func playButtonTapped() { viewModel.togglePlayPause() }
     @objc func nextButtonTapped() { viewModel.nextTrack() }
     @objc func previousButtonTapped() { viewModel.previousTrack() }

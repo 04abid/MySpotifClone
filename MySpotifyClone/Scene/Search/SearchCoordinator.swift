@@ -16,9 +16,7 @@ class SearchCoordinator: Coordinator {
     }
     
     func start() {
-        let controller = SearchController()
+        let controller = SearchController(viewModel: SearchViewModel(useCase: SearchManager()))
         navigationController.show(controller, sender: nil)
     }
-    
-    
 }

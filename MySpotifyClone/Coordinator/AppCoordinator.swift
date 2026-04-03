@@ -43,6 +43,7 @@ class AppCoordinator: Coordinator {
         let libraryNav = UINavigationController()
         libraryNav.tabBarItem = .init(title: "Library", image: UIImage(systemName: "music.note.list"), tag: 2)
         let libraryCoordinator = LibraryCoordinator(navigationController: libraryNav)
+        libraryCoordinator.delegate = self
         libraryCoordinator.start()
         childCoordinators.append(libraryCoordinator)
         
@@ -154,5 +155,10 @@ extension AppCoordinator: HomeCoordinatorDelegate {
 extension AppCoordinator: SearchCordinatorDelegate {
     func didTapTrack(track: Track) {
         openPlayer(for: track)
+    }
+}
+extension AppCoordinator: LibraryCoordinatorDelegate {
+    func passData(music: Track) {
+        openPlayer(for: music)
     }
 }

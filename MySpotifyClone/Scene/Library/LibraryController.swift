@@ -15,9 +15,11 @@ class LibraryController: BaseController {
         table.delegate = self
         table.backgroundColor = .black
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        table.register(SearchCell.self, forCellReuseIdentifier: "SearchCell")
         return table
     }()
+    
+    private var viewModel = LibraryViewModel()
     
     override func configureConstraint() {
         view.addSubview(table)
@@ -33,6 +35,13 @@ class LibraryController: BaseController {
         super.viewDidLoad()
         view.backgroundColor = .black
         configureNotification()
+    }
+    
+    override func configureViewModel() {
+        FavoritesManager.shared.succes = { [weak self] in
+            self?.table.reloadData()
+        }
+        FavoritesManager.shared.fetchData()
     }
     
     func configureNotification() {
@@ -55,9 +64,9 @@ extension LibraryController: UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = table.dequeueReusableCell(withIdentifier: "Cell")
-        let music = FavoritesManager.shared.likedMusics[indexPath.row]
-        cell?.textLabel?.text = music.name
-        return cell!
+        let cell = table.dequeueReusableCell(withIdentifier: "SearchCell") as! SearchCell
+        let music =  FavoritesManager.shared.likedMusics[indexPath.row]
+        cell.configure(data: music)
+        return cell
     }
 }

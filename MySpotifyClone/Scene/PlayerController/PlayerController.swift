@@ -78,6 +78,7 @@ class PlayerController: BaseController {
         button.setImage(UIImage(systemName: "plus.circle"), for: .normal)
         button.tintColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -323,6 +324,16 @@ class PlayerController: BaseController {
             self?.gradientLayer.colors = [color.withAlphaComponent(0.7).cgColor, UIColor.black.cgColor]
             self?.gradientLayer.add(animation, forKey: "colorChange")
         }
+        
+        viewModel.likeStateChanged = { [weak self] success in
+            if success {
+                self?.plusButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                self?.plusButton.tintColor = .green
+            } else {
+                self?.plusButton.setImage(UIImage(systemName: "plus.circle"), for: .normal)
+                self?.plusButton.tintColor = .white
+            }
+        }
     }
     
     private func makeThumbImage(size: CGFloat, color: UIColor) -> UIImage {
@@ -350,4 +361,8 @@ extension PlayerController {
     @objc func shuffleButtonTapped() { viewModel.toggleShuffle() }
     @objc func repeatButtonTapped() { viewModel.toggleRepeat() }
     @objc func sliderChanged() { viewModel.seek(to: progressSlider.value) }
+    @objc func plusButtonTapped() {
+        guard let track = viewModel.track else {return}
+        viewModel.like(music: track)
+    }
 }

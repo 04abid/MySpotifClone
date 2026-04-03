@@ -9,6 +9,8 @@ import Foundation
 
 class SearchManager: SearchUseCase {
     func getSearchInformations(word: String, completion: @escaping (Search?, String?) -> Void) {
-        TokenRefreshManager.shared.checkAccessToken(model: Search.self, endpoint: Endpoint.search(word: word).url, completion: completion)
+        TokenRefreshManager.shared.checkAccessToken(model: Search.self,
+                                                    endpoint: Endpoint.search(word: word).url,
+                                                    completion: completion)
     }
 }

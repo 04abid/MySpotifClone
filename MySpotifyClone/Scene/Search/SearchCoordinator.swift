@@ -8,8 +8,14 @@
 import UIKit
 
 
+protocol SearchCordinatorDelegate {
+    func didTapTrack(track: Track)
+}
+
 class SearchCoordinator: Coordinator {
     var navigationController: UINavigationController
+    
+     var searchCordinatorDelegate: SearchCordinatorDelegate?
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
@@ -17,6 +23,15 @@ class SearchCoordinator: Coordinator {
     
     func start() {
         let controller = SearchController(viewModel: SearchViewModel(useCase: SearchManager()))
+        controller.searchResult.delegate = self
         navigationController.show(controller, sender: nil)
     }
 }
+
+extension SearchCoordinator:SearchMusicDelegate {
+    func searchMusicTapped(trackID: Track) {
+        searchCordinatorDelegate?.didTapTrack(track: trackID)
+    }
+}
+
+

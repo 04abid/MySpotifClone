@@ -9,6 +9,9 @@ import XCTest
 @testable import MySpotifyClone
 
 final class MySpotifyCloneTests: XCTestCase {
+    
+    let viewModel = SearchViewModel(useCase: SearchManager())
+    let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager.shared))
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -17,7 +20,16 @@ final class MySpotifyCloneTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
+    
+    
+    func testSearchData() throws {
+        let text: String? = nil
+        XCTAssertNotNil(viewModel.getSearchData(word: text ?? ""))
+    }
+    
+    
+    
+    
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.

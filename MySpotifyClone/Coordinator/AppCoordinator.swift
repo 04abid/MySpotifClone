@@ -36,6 +36,7 @@ class AppCoordinator: Coordinator {
         let searchNav = UINavigationController()
         searchNav.tabBarItem = .init(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
         let searchCoordinator = SearchCoordinator(navigationController: searchNav)
+        searchCoordinator.searchCordinatorDelegate = self
         searchCoordinator.start()
         childCoordinators.append(searchCoordinator)
         
@@ -146,6 +147,12 @@ class AppCoordinator: Coordinator {
 
 extension AppCoordinator: HomeCoordinatorDelegate {
     func homeCoordinatorDidTapTrack(_ track: Track) {
+        openPlayer(for: track)
+    }
+}
+
+extension AppCoordinator: SearchCordinatorDelegate {
+    func didTapTrack(track: Track) {
         openPlayer(for: track)
     }
 }

@@ -7,6 +7,8 @@
 
 import UIKit
 
+
+
 class SearchController: BaseController {
     private lazy var collection: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
@@ -26,7 +28,7 @@ class SearchController: BaseController {
         return search
     }()
     
-    private let searchResult = SearchResultsController()
+     let searchResult = SearchResultsController()
     
     private var viewModel: SearchViewModel
     
@@ -89,7 +91,6 @@ extension SearchController:UISearchResultsUpdating {
             return
         }
         viewModel.getSearchData(word: text)
-      
     }
     
 }

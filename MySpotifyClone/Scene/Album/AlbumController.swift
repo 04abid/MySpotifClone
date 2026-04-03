@@ -76,8 +76,6 @@ extension AlbumController: UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let controller = PlayerController(viewModel: PlayerViewModel(track: viewModel.getTrack(at: indexPath.row),playerManager: SpotifyPlayBackManager.shared))
-//        navigationController?.show(controller, sender: nil)
         delegate?.albumDetaiTapped(track: viewModel.getTrack(at: indexPath.row))
     }
 }

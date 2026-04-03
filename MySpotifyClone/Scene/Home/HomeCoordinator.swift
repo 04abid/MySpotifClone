@@ -49,10 +49,9 @@ extension HomeCoordinator: HomeControllerDelegate {
         // yaxında
     }
 }
+
 extension HomeCoordinator: AlbumControllerDelegate {
     func albumDetaiTapped(track: Track) {
         playerDelegate?.homeCoordinatorDidTapTrack(track)
     }
-    
-    
 }

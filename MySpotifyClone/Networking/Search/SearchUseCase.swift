@@ -8,5 +8,5 @@
 import Foundation
 
 protocol SearchUseCase {
-    func getSearchInformations(word:String,completion: @escaping((Search?,String?) -> Void))
+    func getSearchInformations(word: String, completion: @escaping((Search?, String?) -> Void))
 }

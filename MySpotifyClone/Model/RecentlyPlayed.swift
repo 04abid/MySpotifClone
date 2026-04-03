@@ -62,6 +62,7 @@ struct Album: Codable {
 struct Artist: Codable {
     let id: String
     let name: String
+    let images: [SpotifyImage]?
 }
 
 
@@ -69,4 +70,45 @@ struct SpotifyImage: Codable {
     let url: String
     let height: Int?
     let width: Int?
+}
+
+
+extension Track {
+    
+    func convertToDictionary() -> [String: Any] {
+        return [
+            "id": id,
+            "name": name,
+            "uri": uri,
+            "album": album?.images.first?.url ?? "",
+            "artist": artists.first?.name ?? "",
+            "duration": durationMs,
+        ]
+    }
+    
+   static func fromDictionary(dict: [String:Any]) -> Track? {
+      guard let id = dict["id"] as? String,
+            let name = dict["name"] as? String,
+            let uri = dict["uri"] as? String
+        else {return nil}
+        
+       let duration = dict["duration"] as? Int ?? 0
+       let artistName = dict["artist"] as? String ?? ""
+       let albumImageUrl = dict["album"] as? String ?? ""
+        
+        
+        let artist = Artist(id: "", name: artistName, images: nil)
+        let image = SpotifyImage(url: albumImageUrl, height: nil, width: nil)
+        let album = Album(id: "", name: "", images: [image], artists: [], albumType: "", releaseDate: "")
+       
+       return Track(id: id,
+                    name: name,
+                    artists: [artist],
+                    album: album,
+                    durationMs: duration,
+                    explicit: nil,
+                    uri: uri,
+                    isPlayable: nil)
+        
+    }
 }

@@ -161,22 +161,22 @@ class HomeController: BaseController {
         view.addSubview(profileHeaderView)
         profileHeaderView.addSubview(profilePicture)
         profileHeaderView.addSubview(stack)
+        
         NSLayoutConstraint.activate([
+            profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            profileHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            profileHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            profileHeaderView.heightAnchor.constraint(equalToConstant: 50),
             
-            collection.topAnchor.constraint(equalTo: profileHeaderView.bottomAnchor,constant: 20),
+            collection.topAnchor.constraint(equalTo: profileHeaderView.bottomAnchor, constant: 4),
             collection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            profilePicture.leadingAnchor.constraint(equalTo: profileHeaderView.leadingAnchor,constant: 12),
+            profilePicture.leadingAnchor.constraint(equalTo: profileHeaderView.leadingAnchor, constant: 12),
             profilePicture.centerYAnchor.constraint(equalTo: profileHeaderView.centerYAnchor),
             profilePicture.widthAnchor.constraint(equalToConstant: 40),
             profilePicture.heightAnchor.constraint(equalToConstant: 40),
-            
-            profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
-            profileHeaderView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            profileHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            profileHeaderView.heightAnchor.constraint(equalToConstant: 80),
             
             stack.centerYAnchor.constraint(equalTo: profileHeaderView.centerYAnchor),
             stack.leadingAnchor.constraint(equalTo: profilePicture.trailingAnchor, constant: 20)

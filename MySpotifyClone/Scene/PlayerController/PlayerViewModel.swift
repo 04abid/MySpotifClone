@@ -35,6 +35,7 @@ class PlayerViewModel {
     var onShuffleChanged: ((Bool) -> Void)?
     var onRepeatChanged: ((Int) -> Void)?
     var onGradientColorChanged: ((UIColor) -> Void)?
+    var likeStateChanged: ((Bool) -> Void)?
     
     // Computed — expand halında PlaybackManager-dan oxuyur
     var trackName: String {
@@ -209,6 +210,13 @@ class PlayerViewModel {
         playerManager.seek(to: newPosition)
         updateTimeLabels()
     }
+    
+    func like(music: Track) {
+        FavoritesManager.shared.toggleLike(music: music)
+        let isLiked = FavoritesManager.shared.isLiked(music: music)
+        likeStateChanged?(isLiked)
+    }
+    
     
     // MARK: - Timer
     

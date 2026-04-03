@@ -22,13 +22,15 @@ class SearchCell: UITableViewCell {
        let image = UIImageView()
         image.contentMode = .scaleAspectFit
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.clipsToBounds = false
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 12
         return image
     }()
         
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureConstraint()
+        backgroundColor = .black
     }
     
     required init?(coder: NSCoder) {
@@ -40,7 +42,7 @@ class SearchCell: UITableViewCell {
         contentView.addSubview(picture)
         
         NSLayoutConstraint.activate([
-            picture.leadingAnchor.constraint(equalTo: leadingAnchor,constant: 8),
+            picture.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             picture.centerYAnchor.constraint(equalTo: centerYAnchor),
             picture.heightAnchor.constraint(equalToConstant: 50),
             picture.widthAnchor.constraint(equalToConstant: 50),
@@ -49,10 +51,9 @@ class SearchCell: UITableViewCell {
             searchLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-    
-    func configure(data:Search) {
-       
+
+    func configure(data: ReusableSearch) {
+        searchLabel.text = data.musicName
+        picture.loadImage(data: data.musicImage)
     }
-   
-    
 }

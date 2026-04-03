@@ -10,4 +10,5 @@ import Foundation
 extension Notification.Name {
     static let playerStateDidChange = Notification.Name("playerStateDidChange")
     static let playerImageDidChange = Notification.Name("playerImageDidChange")
+    static let favoritesDidChange = Notification.Name("favoritesDidChange")
 }

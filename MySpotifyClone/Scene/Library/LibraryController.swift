@@ -29,7 +29,7 @@ class LibraryController: BaseController {
         let label = UILabel()
         label.text = "liked Musics"
         label.textColor = .white
-        label.font = .systemFont(ofSize: 20)
+        label.font = .systemFont(ofSize: 22, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(label)
         NSLayoutConstraint.activate([
@@ -97,13 +97,10 @@ extension LibraryController: UITableViewDelegate,UITableViewDataSource {
         delegate?.sendData(musicID: music)
     }
     
-    
-    
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let music = FavoritesManager.shared.likedMusics[indexPath.row]
             FavoritesManager.shared.toggleLike(music: music)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 }

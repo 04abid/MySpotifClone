@@ -21,8 +21,6 @@ class AuthController: BaseController, WKNavigationDelegate {
         return webView
     }()
     
-    var compleationHandler:((Bool) -> Void)?
-    
     private var viewModel: AuthViewModel
     init(viewModel:AuthViewModel) {
         self.viewModel = viewModel
@@ -47,10 +45,13 @@ class AuthController: BaseController, WKNavigationDelegate {
     
     override func configureViewModel() {
         viewModel.succes = { [weak self] in
-            self?.navigationController?.popToRootViewController(animated: true)
-            self?.compleationHandler?(true)
-            
+            guard let window = self?.view.window else { return }
+            let navController = UINavigationController()
+            let coordinator = AppCoordinator(navigationController: navController)
+            coordinator.start()
+            window.rootViewController = navController
         }
+        
         viewModel.failure = { error in
             print("\(error)")
         }

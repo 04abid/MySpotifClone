@@ -10,13 +10,14 @@ import Foundation
 
 class ProfileManager:ProfileUseCase {
     
-    private var tokenManager: TokenRefreshManager
-    init(tokenManager: TokenRefreshManager) {
-        self.tokenManager = tokenManager
+    private var manager: CoreManager
+    init(manager: CoreManager) {
+        self.manager = manager
     }
         
     func getCurrentUserProfile(completion: @escaping (UserProfile?, String?) -> Void) {
-        tokenManager.checkAccessToken(model: UserProfile.self, endpoint: Endpoint.UserProfile.url, completion: completion)
+//        tokenManager.checkAccessToken(model: UserProfile.self, endpoint: Endpoint.UserProfile.url, completion: completion)
+        manager.request(model: UserProfile.self, endpoint: Endpoint.UserProfile.url, completion: completion,needAuth: true)
     }
     
 }

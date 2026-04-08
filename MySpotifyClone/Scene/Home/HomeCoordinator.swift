@@ -35,7 +35,7 @@ extension HomeCoordinator: HomeControllerDelegate {
     }
     
     func didTapAlbum(album: Album) {
-        let controller = AlbumController(viewModel: AlbumViewModel(manager: AlbumManager(), album: album))
+        let controller = AlbumController(viewModel: AlbumViewModel(manager: AlbumManager(manager: CoreManager()), album: album))
         controller.delegate = self
         navigationController.show(controller, sender: nil)
     }

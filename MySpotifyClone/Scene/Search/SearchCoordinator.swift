@@ -22,7 +22,7 @@ class SearchCoordinator: Coordinator {
     }
     
     func start() {
-        let controller = SearchController(viewModel: SearchViewModel(useCase: SearchManager()))
+        let controller = SearchController(viewModel: SearchViewModel(useCase: SearchManager(manager: CoreManager())))
         controller.searchResult.delegate = self
         navigationController.show(controller, sender: nil)
     }

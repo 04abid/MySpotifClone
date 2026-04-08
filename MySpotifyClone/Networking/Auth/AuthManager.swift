@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class AuthManager:AuthUseCase {
     static let shared = AuthManager()
     private let manager =  CoreManager()
@@ -85,6 +84,9 @@ class AuthManager:AuthUseCase {
 
 
 // MARK: Functions
+
+
+
 
 extension AuthManager {
     func exchangeCodeForToken(code: String, completion: @escaping (AuthResponse?, String?) -> Void) {
@@ -172,6 +174,12 @@ extension AuthManager {
                 completion(false)
             }
         }
+    }
+    
+    func signOut() {
+        KeychainManager.shared.delete(forKey: "access_token")
+        KeychainManager.shared.delete(forKey: "refresh_token")
+        UserDefaults.standard.removeObject(forKey: "expires_in")
     }
     
 }

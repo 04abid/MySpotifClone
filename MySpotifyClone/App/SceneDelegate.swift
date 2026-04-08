@@ -20,22 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
     
         if manager.isSignedIn {
-            AuthManager.shared.loadCredentials { succes in
-                DispatchQueue.main.async {
-                    if succes {
-                        let navigationController = UINavigationController()
-                        self.appCoordinator = AppCoordinator(navigationController: navigationController)
-                        self.appCoordinator?.start()
-                        self.window?.rootViewController = navigationController
-                    } else {
-                        let navVC = UINavigationController(rootViewController: WelcomeController())
-                        navVC.navigationBar.prefersLargeTitles = true
-                        navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
-                        self.window?.rootViewController = navVC
-                    }
-                }
-            }
-        } else {
+            let navigationController = UINavigationController()
+            self.appCoordinator = AppCoordinator(navigationController: navigationController)
+            self.appCoordinator?.start()
+            self.window?.rootViewController = navigationController
+        }
+        else {
             let navVC = UINavigationController(rootViewController: WelcomeController())
             navVC.navigationBar.prefersLargeTitles = true
             navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always

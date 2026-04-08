@@ -54,24 +54,26 @@ class WelcomeController: BaseController {
     @objc func buttonTapped() {
         let controller = AuthController(viewModel: AuthViewModel(useCase: AuthManager.shared))
         
-        controller.compleationHandler = { [weak self] succes in
-            DispatchQueue.main.async {
-                self?.handleSignIn(succes:succes)
-            }
-        }
+//        controller.compleationHandler = { [weak self] succes in
+//            DispatchQueue.main.async {
+//                self?.handleSignIn(succes:succes)
+//            }
+        
         controller.navigationItem.largeTitleDisplayMode = .never
         navigationController?.show(controller, sender: nil)
     }
     
-    private func handleSignIn(succes: Bool) {
-        guard succes else {
-            let alert = createAlert(title: "OOPS", message: "shomething went wrong")
-            alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
-            present(alert, animated: true)
-            return
-        }
-        let controller = TabBarController()
-        controller.modalPresentationStyle = .fullScreen
-        present(controller, animated: true)
-    }
+//    private func handleSignIn(succes: Bool) {
+//        guard succes else {
+//            let alert = createAlert(title: "OOPS", message: "shomething went wrong")
+//            alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
+//            present(alert, animated: true)
+//            return
+//        }
+////        guard let navController = navigationController else { return }
+////        let coordinator = AppCoordinator(navigationController: navController)
+////        guard let window = self.view.window else {return}
+////        coordinator.start()
+////        window.rootViewController = navController
+//    }
 }

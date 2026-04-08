@@ -51,13 +51,23 @@ class SettingsController: BaseController {
     }
     
     private func viewYourProfile() {
-        let controller = ProfileController(viewModel: ProfileViewModel(useCase: ProfileManager(tokenManager: TokenRefreshManager.shared)))
+        let controller = ProfileController(viewModel: ProfileViewModel(useCase: ProfileManager(manager: CoreManager())))
         controller.navigationItem.largeTitleDisplayMode = .never
         navigationController?.show(controller, sender: nil)
     }
     
     private func signOut() {
-        
+        let alert = createAlert(title: "Log Out", message: "Are you sure Loggin Out", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "confirm", style: .destructive,handler: { [weak self] _ in
+            AuthManager.shared.signOut()
+            let controller = UINavigationController(rootViewController: WelcomeController())
+            guard let window = self?.view.window else {
+                return
+            }
+            window.rootViewController = controller
+        }))
+        alert.addAction(UIAlertAction(title: "No", style: .cancel))
+        present(alert, animated: true)
     }
 }
 

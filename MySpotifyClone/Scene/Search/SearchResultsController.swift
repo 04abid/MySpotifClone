@@ -27,7 +27,7 @@ class SearchResultsController: BaseController {
     
     var delegate: SearchMusicDelegate?
     
-    var viewModel = SearchViewModel(useCase: SearchManager())
+    var viewModel = SearchViewModel(useCase: SearchManager(manager: CoreManager()))
     
     override func viewDidLoad() {
         super.viewDidLoad()

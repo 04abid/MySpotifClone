@@ -61,9 +61,9 @@ class HomeController: BaseController {
     
 
     
-    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(tokenManager: TokenRefreshManager.shared))
+    private let profileViewModel = ProfileViewModel(useCase: ProfileManager(manager: CoreManager()))
 
-    private let homeViewModel = HomeViewModel(manager: HomeManager(manager: TokenRefreshManager.shared))
+    private let homeViewModel = HomeViewModel(manager: HomeManager(manager: CoreManager()))
     
     private var selectedFilterIndex = 0
     
@@ -76,7 +76,6 @@ class HomeController: BaseController {
          refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         collection.refreshControl = refreshControl
     }
-    
     
     @objc func refreshData() {
         homeViewModel.getBrowseData()
@@ -206,9 +205,6 @@ class HomeController: BaseController {
     
     private func configureHomeViewModel() {
         homeViewModel.succes = { [weak self]  in
-            print("recentlyPlayed: \(self?.homeViewModel.recentlyPlayed.count ?? 0)")
-            print("topTracks: \(self?.homeViewModel.topTracks.count ?? 0)")
-            print("savedAlbums: \(self?.homeViewModel.savedAlbums.count ?? 0)")
             self?.collection.reloadData()
             self?.collection.refreshControl?.endRefreshing()
         }
@@ -325,9 +321,7 @@ extension HomeController: UICollectionViewDelegate,UICollectionViewDataSource {
     }
     
     
-    
     // MARK: CompositionLayout Configuration
-    
     private func createSection(for sectionIndex: Int) -> NSCollectionLayoutSection {
         let section = HomeSection(rawValue: sectionIndex)
         switch section {

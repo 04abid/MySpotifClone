@@ -101,6 +101,7 @@ extension LibraryController: UITableViewDelegate,UITableViewDataSource {
         if editingStyle == .delete {
             let music = FavoritesManager.shared.likedMusics[indexPath.row]
             FavoritesManager.shared.toggleLike(music: music)
+            
         }
     }
 }
